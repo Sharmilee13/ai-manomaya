@@ -2,7 +2,7 @@ import os
 import json
 from groq import Groq
 from dotenv import load_dotenv
-from groq_utils import groq_chat_completion
+from groq_utils import groq_chat_completion, DEFAULT_MODEL
 from storyboard.prompts import STORYBOARD_SYSTEM_PROMPT, STORYBOARD_USER_PROMPT_TEMPLATE
 from storyboard.schemas import StoryboardResponse
 
@@ -14,7 +14,7 @@ def generate_storyboard(scene: str) -> StoryboardResponse:
     """
     Generate storyboard shots from scene screenplay text using Groq.
     """
-    model_name = "llama-3.3-70b-versatile"
+    model_name = DEFAULT_MODEL
     user_content = STORYBOARD_USER_PROMPT_TEMPLATE.format(scene=scene)
     
     response_text = ""
@@ -32,24 +32,8 @@ def generate_storyboard(scene: str) -> StoryboardResponse:
         )
         response_text = completion.choices[0].message.content.strip()
     except Exception as e:
-        print(f"Error calling {model_name}, trying fallback model: {e}")
-        # Try fallback model llama-3.1-8b-instant
-        try:
-            completion = groq_chat_completion(
-                client,
-                model="llama-3.1-8b-instant",
-                messages=[
-                    {"role": "system", "content": STORYBOARD_SYSTEM_PROMPT},
-                    {"role": "user", "content": user_content}
-                ],
-                response_format={"type": "json_object"},
-                max_tokens=2000,
-                temperature=0.7
-            )
-            response_text = completion.choices[0].message.content.strip()
-        except Exception as fallback_err:
-            print(f"Fallback model also failed: {fallback_err}")
-            response_text = ""
+        print(f"Error calling {model_name}: {e}")
+        response_text = ""
 
     if not response_text:
         # Build a safe default structure if both API calls fail

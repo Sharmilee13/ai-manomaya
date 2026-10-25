@@ -1,5 +1,6 @@
 import os
 from groq import Groq
+from groq_utils import groq_chat_completion, DEFAULT_MODEL
 
 def enhance_prompt_with_llm(base_prompt):
     api_key = os.getenv("GROQ_API_KEY")
@@ -20,8 +21,9 @@ def enhance_prompt_with_llm(base_prompt):
             "Output ONLY the enhanced prompt paragraph, with no introductory text or markdown formatting."
         )
         
-        completion = client.chat.completions.create(
-            model="llama-3.1-8b-instant",
+        completion = groq_chat_completion(
+            client,
+            model=DEFAULT_MODEL,
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": f"Scene details to enhance:\n{base_prompt}"}

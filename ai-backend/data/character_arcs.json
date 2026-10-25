@@ -1,6 +1,6 @@
 {
-  "test_project_123": {
-    "Aisha": {
+  "6ad64b1032dc9c499423c83a": {
+    "aisha": {
       "starting_state": "Emotionally guarded",
       "current_state": "Emotionally guarded",
       "growth_direction": "Becoming emotionally open",
@@ -8,17 +8,34 @@
       "arc_stage": "beginning",
       "arc_progress": 0,
       "history": []
-    }
-  },
-  "6a1e817273ad268e914a1158": {
-    "Elena Rostova": {
-      "starting_state": "Emotionally guarded",
-      "current_state": "Emotionally guarded",
-      "growth_direction": "Becoming emotionally open",
-      "current_conflict": "Fear of abandonment",
-      "arc_stage": "beginning",
-      "arc_progress": 0,
-      "history": []
+    },
+    "mayank": {
+      "starting_state": "Mayank begins as introspective and cautious, listening more than speaking, feeling uncertain about his own desires while offering quiet support to Aisha",
+      "current_state": "Mayank now exhibits a quieter confidence, having embraced the uncertainty of change and showing a willingness to face the unknown alongside Aisha",
+      "growth_direction": "From uncertainty and self‑doubt toward self‑awareness and acceptance of change",
+      "current_conflict": "Internal struggle between the safety of the familiar and the pull of new possibilities",
+      "arc_stage": "middle",
+      "arc_progress": 60,
+      "history": [
+        {
+          "scene": 1,
+          "title": "Coffee Shop",
+          "progress": 20,
+          "state": "Thoughtful and tentative, Mayank mirrors Aisha's reflections, hinting at his own unease about staying safe"
+        },
+        {
+          "scene": 2,
+          "title": "Mountain Summit (first)",
+          "progress": 45,
+          "state": "More open, Mayank acknowledges his longing for the quiet mountains but notes a shift, signaling growing self‑questioning"
+        },
+        {
+          "scene": 3,
+          "title": "Mountain Summit (second)",
+          "progress": 65,
+          "state": "Mayank shows emerging resolve, accepting the quiet moment as a catalyst for change and expressing willingness to move forward"
+        }
+      ]
     }
   }
 }

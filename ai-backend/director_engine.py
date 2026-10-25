@@ -2,7 +2,7 @@ from groq import Groq
 from dotenv import load_dotenv
 import os
 import json
-from groq_utils import groq_chat_completion
+from groq_utils import groq_chat_completion, DEFAULT_MODEL
 
 load_dotenv()
 
@@ -44,7 +44,7 @@ def generate_direction(scene_text):
 
     completion = groq_chat_completion(
         client,
-        model="llama-3.1-8b-instant",
+        model=DEFAULT_MODEL,
         messages=[{"role": "user", "content": direction_prompt}],
         response_format={"type": "json_object"},
         max_tokens=300,

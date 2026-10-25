@@ -1,7 +1,7 @@
 from groq import Groq
 import os
 import json
-from groq_utils import groq_chat_completion
+from groq_utils import groq_chat_completion, DEFAULT_MODEL
 
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
@@ -52,7 +52,7 @@ Return ONLY a valid JSON object matching the keys exactly:
     try:
         completion = groq_chat_completion(
             client,
-            model="llama-3.1-8b-instant",
+            model=DEFAULT_MODEL,
             messages=[{"role": "user", "content": prompt}],
             response_format={"type": "json_object"},
             max_tokens=300

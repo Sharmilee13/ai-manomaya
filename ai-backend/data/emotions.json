@@ -1,0 +1,27 @@
+{
+  "6ad64b1032dc9c499423c83a": {
+    "aisha": {
+      "trust": 50,
+      "attachment": 50,
+      "awkwardness": 0,
+      "resentment": 0,
+      "comfort": 50
+    },
+    "mayank": {
+      "trust": 50,
+      "attachment": 50,
+      "awkwardness": 0,
+      "resentment": 0,
+      "comfort": 50
+    }
+  },
+  "test_proj": {
+    "aisha": {
+      "trust": 50,
+      "attachment": 50,
+      "awkwardness": 0,
+      "resentment": 0,
+      "comfort": 50
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "6ad64b1032dc9c499423c83a": {
+    "aisha->mayank": {
+      "trust": 53,
+      "attachment": 52,
+      "awkwardness": 2,
+      "resentment": 0,
+      "comfort": 51
+    },
+    "mayank->aisha": {
+      "trust": 57,
+      "attachment": 57,
+      "awkwardness": 5,
+      "resentment": 0,
+      "comfort": 54
+    },
+    "Aisha->Mayank": {
+      "trust": 58,
+      "attachment": 58,
+      "awkwardness": 5,
+      "resentment": 0,
+      "comfort": 54
+    },
+    "Mayank->Aisha": {
+      "trust": 57,
+      "attachment": 57,
+      "awkwardness": 5,
+      "resentment": 0,
+      "comfort": 54
+    }
+  }
+}

@@ -36,7 +36,7 @@ from data.emotions import get_emotion_state
 from pydantic import BaseModel
 from typing import List, Dict, Optional, Any
 import time
-from groq_utils import compute_emotion_deltas, groq_chat_completion, truncate_for_analysis
+from groq_utils import compute_emotion_deltas, groq_chat_completion, truncate_for_analysis, DEFAULT_MODEL
 
 POST_SCENE_LLM_DELAY_SEC = 2.5
 
@@ -176,7 +176,7 @@ def rebuild_story_bible_endpoint(request_data: RebuildBibleRequest):
         try:
             completion = groq_chat_completion(
                 client,
-                model="llama-3.1-8b-instant",
+                model=DEFAULT_MODEL,
                 messages=[{"role": "user", "content": prompt}],
                 response_format={"type": "json_object"},
                 max_tokens=800,
@@ -283,7 +283,7 @@ def rebuild_story_bible_endpoint(request_data: RebuildBibleRequest):
         try:
             completion = groq_chat_completion(
                 client,
-                model="llama-3.1-8b-instant",
+                model=DEFAULT_MODEL,
                 messages=[{"role": "user", "content": arc_prompt}],
                 response_format={"type": "json_object"},
                 max_tokens=600,
@@ -322,8 +322,9 @@ def generate_storyboard_endpoint(request_data: StoryboardRequest):
 @app.post("/chat")
 def chat(prompt: str):
 
-    completion = client.chat.completions.create(
-        model="llama-3.1-8b-instant",
+    completion = groq_chat_completion(
+        client,
+        model=DEFAULT_MODEL,
         messages=[
             {
                 "role": "user",
@@ -563,19 +564,19 @@ Example JSON:
     try:
         completion = groq_chat_completion(
             client,
-            model="llama-3.1-8b-instant",
+            model=DEFAULT_MODEL,
             messages=messages,
             response_format={"type": "json_object"},
-            max_tokens=1500
+            max_tokens=2500
         )
         response_text = completion.choices[0].message.content
     except Exception as json_err:
         print(f"JSON mode failed, retrying without JSON mode: {json_err}")
         completion = groq_chat_completion(
             client,
-            model="llama-3.1-8b-instant",
+            model=DEFAULT_MODEL,
             messages=messages,
-            max_tokens=1500
+            max_tokens=2500
         )
         response_text = completion.choices[0].message.content
     
@@ -586,7 +587,10 @@ Example JSON:
     
     # Robust JSON parsing function with fallbacks
     def safe_parse_json(text):
+        import re
         cleaned = text.strip()
+        # Strip reasoning tags if present
+        cleaned = re.sub(r'<think>.*?</think>', '', cleaned, flags=re.DOTALL).strip()
         try:
             return json.loads(cleaned)
         except Exception:
@@ -625,6 +629,17 @@ Example JSON:
     elif isinstance(response_data, list) and len(response_data) > 0 and isinstance(response_data[0], dict):
         generated_scene = response_data[0].get("scene", "")
         updated_emotions = response_data[0].get("updated_emotions", None)
+
+    # Unwrap if generated_scene itself was serialized as a JSON string containing "scene"
+    if isinstance(generated_scene, str) and (generated_scene.strip().startswith("{") or '"scene"' in generated_scene):
+        try:
+            inner = json.loads(generated_scene)
+            if isinstance(inner, dict) and "scene" in inner:
+                generated_scene = inner.get("scene", generated_scene)
+                if not updated_emotions and "updated_emotions" in inner:
+                    updated_emotions = inner.get("updated_emotions")
+        except Exception:
+            pass
 
     # If parsing failed or couldn't get a valid scene string, manually extract to prevent leak
     if not generated_scene:
@@ -820,8 +835,9 @@ def generate_progressive_prompts(base_prompt, client=None):
     )
     
     try:
-        completion = client.chat.completions.create(
-            model="llama-3.1-8b-instant",
+        completion = groq_chat_completion(
+            client,
+            model=DEFAULT_MODEL,
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": f"Cinematic base prompt: {base_prompt}"}
@@ -1066,7 +1082,7 @@ Example JSON output format:
     
     completion = groq_chat_completion(
         client,
-        model="llama-3.1-8b-instant",
+        model=DEFAULT_MODEL,
         messages=messages,
         response_format={"type": "json_object"},
         max_tokens=1000

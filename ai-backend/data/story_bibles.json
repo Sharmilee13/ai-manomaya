@@ -71,5 +71,32 @@
     "character_summaries": {},
     "relationship_summaries": {},
     "world_summary": ""
+  },
+  "6ad64b1032dc9c499423c83a": {
+    "important_events": [
+      "Aisha confesses she stays in the city because it feels safe, hinting at deeper restlessness.",
+      "Aisha and Mayank reach a remote mountain summit at dusk, confronting their thoughts amid silence."
+    ],
+    "active_story_threads": [
+      "Aisha's quest to discover a purpose beyond the comfort of familiarity.",
+      "Mayank's internal conflict between the pull of the familiar city and the lure of change.",
+      "The unresolved emotional tension and possible romance between Aisha and Mayank."
+    ],
+    "character_summaries": {
+      "Aisha": "She moves from cautious self‑preservation toward actively questioning her life choices.",
+      "Mayank": "He shifts from quiet acceptance of routine to uneasy curiosity about a different future."
+    },
+    "relationship_summaries": {
+      "Aisha->Mayank": "She leans on his presence for reassurance while still guarding her doubts.",
+      "Mayank->Aisha": "He offers quiet support but struggles to articulate his own uncertainty."
+    },
+    "world_summary": "The story unfolds between a rain‑soaked urban coffee shop and a mist‑cloaked mountain summit at dusk, creating a moody, introspective atmosphere where the external quiet mirrors the characters' internal turbulence."
+  },
+  "test_proj": {
+    "important_events": [],
+    "active_story_threads": [],
+    "character_summaries": {},
+    "relationship_summaries": {},
+    "world_summary": ""
   }
 }

@@ -2,7 +2,7 @@ from groq import Groq
 import os
 from dotenv import load_dotenv
 import json
-from groq_utils import groq_chat_completion
+from groq_utils import groq_chat_completion, DEFAULT_MODEL
 
 load_dotenv()
 
@@ -281,7 +281,7 @@ Scene:
 
     completion = groq_chat_completion(
         client,
-        model="llama-3.1-8b-instant",
+        model=DEFAULT_MODEL,
         messages=[{"role": "user", "content": analysis_prompt}],
         response_format={"type": "json_object"},
         max_tokens=500,

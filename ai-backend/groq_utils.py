@@ -1,5 +1,8 @@
+import os
 import re
 import time
+
+DEFAULT_MODEL = os.getenv("GROQ_MODEL", "openai/gpt-oss-120b")
 
 EMOTION_KEYS = frozenset(
     {"trust", "attachment", "awkwardness", "resentment", "comfort"}
@@ -55,13 +58,44 @@ def _is_rate_limit_error(exc):
 
 
 def groq_chat_completion(client, *, max_retries=4, **kwargs):
-    """Call Groq chat completions with automatic retry on rate limits."""
+    """Call Groq chat completions with automatic retry on rate limits and model defaults."""
+    # Ensure current model is used
+    model = kwargs.get("model")
+    if not model or model in ("llama-3.1-8b-instant", "llama-3.3-70b-versatile"):
+        kwargs["model"] = DEFAULT_MODEL
+
+    # Adapt max_tokens to max_completion_tokens for openai/* and reasoning models
+    current_model = kwargs.get("model", "")
+    if "openai/" in current_model or "oss" in current_model:
+        if "max_tokens" in kwargs and "max_completion_tokens" not in kwargs:
+            kwargs["max_completion_tokens"] = kwargs.pop("max_tokens")
+
     last_error = None
     for attempt in range(max_retries):
         try:
             return client.chat.completions.create(**kwargs)
         except Exception as exc:
             last_error = exc
+            err_str = str(exc).lower()
+
+            # Handle parameter error where API expects max_completion_tokens instead of max_tokens
+            if "max_tokens" in err_str and "max_completion_tokens" in err_str and "max_tokens" in kwargs:
+                kwargs["max_completion_tokens"] = kwargs.pop("max_tokens")
+                try:
+                    return client.chat.completions.create(**kwargs)
+                except Exception as inner_exc:
+                    last_error = inner_exc
+                    err_str = str(inner_exc).lower()
+
+            # If json_object mode fails on model, remove response_format and retry
+            if "response_format" in kwargs and ("not supported" in err_str or "unsupported" in err_str or "400" in err_str):
+                kwargs.pop("response_format", None)
+                try:
+                    return client.chat.completions.create(**kwargs)
+                except Exception as inner_exc:
+                    last_error = inner_exc
+                    err_str = str(inner_exc).lower()
+
             if not _is_rate_limit_error(exc) or attempt >= max_retries - 1:
                 raise
             wait = _parse_retry_seconds(exc) or (2.5 * (attempt + 1))
